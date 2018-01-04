@@ -212,25 +212,8 @@ CLASS lcl_gamefield IMPLEMENTATION.
 *          (  1, -1 ) + ( -1, 1 ) -> 4 <= depth; diagonal-backward
           check_line 1 -1 -1 1.
 
-*          (  0,  1 )             -> 4 <= depth; down (no other direction here)
-          lw_depth = expand_on(
-            iwa_vector = VALUE #(
-              x  = lw_col_idx
-              " TODO: If the whole iw_column is empty, we don't need to subtract
-              y  = lw_row_idx + COND #( WHEN lw_row_idx = lcl_utils=>c_field_height THEN 1 )
-              sx = 0
-              sy = 1
-            )
-            io_eqto = io_player
-          ).
-          IF 3 <= lw_depth.
-            INSERT VALUE #(
-              count   = lw_depth
-              player  = io_player
-              x       = lw_col_idx
-              y       = lw_row_idx
-            ) INTO TABLE ri_positions.
-          ENDIF.
+*          (  0,  1 ) + ( 0, -1 ) -> 4 <= depth; down
+          check_line 0 1 0 -1.
 
           " If the upper block was already found, we can break on this column
           UNASSIGN <fs_cell>.
